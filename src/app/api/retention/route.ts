@@ -3,13 +3,13 @@ import bigquery from "@/lib/bigquery"; // ✅ Make sure you already have this in
 
 export async function GET() {
   const query = `
-  WITH users AS (
+ WITH users AS (
   SELECT
     JSON_VALUE(data, '$.email') AS email,
     TIMESTAMP_SECONDS(CAST(JSON_VALUE(data, '$.created_at._seconds') AS INT64)) AS created_at,
     JSON_QUERY(data, '$.progress') AS progress
   FROM
-   \`keshah-app.firestore_export.users_raw_latest\`
+    \`keshah-app.firestore_export.users_raw_latest\`
   WHERE
     JSON_QUERY(data, '$.progress') IS NOT NULL
     AND JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false'
@@ -44,13 +44,21 @@ retention AS (
 
 SELECT
   ROUND(100 * (day1_active / NULLIF(eligible_day1, 0)), 2) AS day1_retention,
+  eligible_day1 AS day1_users,
   ROUND(100 * (day3_active / NULLIF(eligible_day3, 0)), 2) AS day3_retention,
+  eligible_day3 AS day3_users,
   ROUND(100 * (day7_active / NULLIF(eligible_day7, 0)), 2) AS day7_retention,
+  eligible_day7 AS day7_users,
   ROUND(100 * (day15_active / NULLIF(eligible_day15, 0)), 2) AS day15_retention,
+  eligible_day15 AS day15_users,
   ROUND(100 * (day30_active / NULLIF(eligible_day30, 0)), 2) AS day30_retention,
+  eligible_day30 AS day30_users,
   ROUND(100 * (day60_active / NULLIF(eligible_day60, 0)), 2) AS day60_retention,
-  ROUND(100 * (day90_active / NULLIF(eligible_day90, 0)), 2) AS day90_retention
+  eligible_day60 AS day60_users,
+  ROUND(100 * (day90_active / NULLIF(eligible_day90, 0)), 2) AS day90_retention,
+  eligible_day90 AS day90_users
 FROM retention;
+
 
   `;
 
