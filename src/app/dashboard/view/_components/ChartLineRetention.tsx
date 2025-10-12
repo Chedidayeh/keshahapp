@@ -127,7 +127,7 @@ export function ChartLineRetention() {
     if (active && payload && payload.length > 0) {
       const data = payload[0].payload as ChartPoint;
       return (
-        <div className=" border rounded p-2 shadow">
+        <div className=" border bg-white dark:bg-black rounded p-2 shadow">
           <div className="font-medium">{data.day}</div>
           <div>Retention: {data.retention}%</div>
           <div>Users: {data.users}</div>
