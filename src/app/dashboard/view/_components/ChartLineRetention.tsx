@@ -58,7 +58,7 @@ type ChartPoint = {
 // } satisfies ChartConfig;
 
 const chartConfig = {
-  retention: { label: "Retention %", color: "var(--chart-1)" },
+  retention: { label: "Active Users %", color: "var(--chart-1)" },
   completedRetention: { label: "Completed Exercises %", color: "#808080" }, // changed to gray
 } satisfies ChartConfig;
 
