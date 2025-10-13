@@ -38,7 +38,7 @@ export function SectionCards() {
     groupedUsers: [],
   });
 
-  console.log("Stats state:", stats.groupedUsers);
+  console.log("Stats state:", stats);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

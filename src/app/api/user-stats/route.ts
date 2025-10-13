@@ -7,51 +7,41 @@ export async function GET() {
     // ✅ Users who started today
     const usersStartedTodayQuery = `
       SELECT
-        COUNT(DISTINCT JSON_EXTRACT_SCALAR(data, '$.wp_user.ID')) AS users_started_today
+        COUNT(*) AS users_started_today
       FROM
         \`keshah-app.firestore_export.users_raw_latest\`
       WHERE
         JSON_EXTRACT_SCALAR(data, '$.start_date.date') = FORMAT_DATE('%d/%m/%Y', CURRENT_DATE())
-        AND JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false'
     `;
 
-
-const totalGroupedUsersQuery = `
-  SELECT
-    JSON_EXTRACT_SCALAR(data, '$.user_type') AS user_type,
-    COUNT(DISTINCT JSON_EXTRACT_SCALAR(data, '$.wp_user.ID')) AS user_count,
-    (SELECT COUNT(DISTINCT JSON_EXTRACT_SCALAR(data, '$.wp_user.ID')) 
-     FROM \`keshah-app.firestore_export.users_raw_latest\`
-     WHERE JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false') AS total_users
-  FROM
-    \`keshah-app.firestore_export.users_raw_latest\`
-  WHERE
-    JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false'
-  GROUP BY user_type
-  ORDER BY user_count DESC;
-`;
-
+    const totalGroupedUsersQuery = `
+      SELECT
+        JSON_EXTRACT_SCALAR(data, '$.user_type') AS user_type,
+        COUNT(*) AS user_count,
+        (SELECT COUNT(*) 
+         FROM \`keshah-app.firestore_export.users_raw_latest\`) AS total_users
+      FROM
+        \`keshah-app.firestore_export.users_raw_latest\`
+      GROUP BY user_type
+      ORDER BY user_count DESC;
+    `;
 
     // ✅ Total users
     const totalUsersQuery = `
       SELECT
-  COUNT(DISTINCT JSON_EXTRACT_SCALAR(data, '$.wp_user.ID')) AS total_users
-FROM
-  \`keshah-app.firestore_export.users_raw_latest\`
-WHERE
-  JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false'
-
+        COUNT(*) AS total_users
+      FROM
+        \`keshah-app.firestore_export.users_raw_latest\`
     `;
 
     // ✅ Users started in the last 7 days
     const usersLast7DaysQuery = `
       SELECT
-        COUNT(DISTINCT JSON_EXTRACT_SCALAR(data, '$.wp_user.ID')) AS users_started_last_7_days
+        COUNT(*) AS users_started_last_7_days
       FROM
         \`keshah-app.firestore_export.users_raw_latest\`
       WHERE
-        JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false'
-        AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
+        JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
         AND PARSE_DATE('%d/%m/%Y', JSON_EXTRACT_SCALAR(data, '$.start_date.date'))
           BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 6 DAY) AND CURRENT_DATE()
     `;
@@ -62,12 +52,9 @@ WHERE
         SELECT
           JSON_EXTRACT_SCALAR(data, '$.wp_user.ID') AS user_id,
           SAFE_CAST(JSON_EXTRACT_SCALAR(data, '$.created_at._seconds') AS INT64) AS created_seconds,
-          JSON_EXTRACT_SCALAR(data, '$.is_deleted') AS is_deleted,
           JSON_EXTRACT_ARRAY(data, '$.progress.days') AS progress_days
         FROM
           \`keshah-app.firestore_export.users_raw_latest\`
-        WHERE
-          JSON_EXTRACT_SCALAR(data, '$.is_deleted') = 'false'
       ),
       recent_progress AS (
         SELECT
@@ -106,9 +93,6 @@ WHERE
       bigquery.query({ query: totalGroupedUsersQuery })
     ]);
 
-// console.log("📊 BigQuery groupedUsersResult:", JSON.stringify(groupedUsersResult[0], null, 2));
-
-
     // ✅ Return structured response
     return NextResponse.json({
       success: true,
@@ -120,7 +104,7 @@ WHERE
         groupedUsers: groupedUsersResult[0].map((row: any) => ({
           user_type: row.user_type ?? "Unknown",
           user_count: Number(row.user_count ?? 0),
-                    total_users: Number(row.total_users ?? 0),
+          total_users: Number(row.total_users ?? 0),
         })),
       },
     });
