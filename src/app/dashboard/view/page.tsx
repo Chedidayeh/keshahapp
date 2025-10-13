@@ -1,6 +1,7 @@
 import { ChartLineRetention } from "./_components/ChartLineRetention";
 import { ChartLineUsers } from "./_components/ChartLineUsers";
 import { SectionCards } from "./_components/section-cards";
+import { WeeklySurveyChart } from "./_components/WeeklySurveyChart";
 
 export default function Page() {
   return (
@@ -8,6 +9,7 @@ export default function Page() {
       <SectionCards />
       <ChartLineUsers />
       <ChartLineRetention />
+      <WeeklySurveyChart/>
       {/* <DataTable data={data} /> */}
     </div>
   );

@@ -10,7 +10,7 @@ export default function UserStatsViewer() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/progress-checker");
+        const res = await fetch("/api/test");
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         const json = await res.json();
         setData(json);
