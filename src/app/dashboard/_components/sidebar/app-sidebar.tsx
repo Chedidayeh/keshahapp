@@ -16,6 +16,7 @@ import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
 
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
+import { useEffect, useState } from "react";
 
 const data = {
   navSecondary: [
@@ -55,13 +56,49 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [theme, setTheme] = useState<string | null>("dark");
+  useEffect(() => {
+    const html = document.documentElement;
+    const observer = new MutationObserver(() => {
+      const isDark = html.classList.contains("dark");
+      setTheme(isDark ? "dark" : "light");
+    });
+
+    observer.observe(html, { attributes: true, attributeFilter: ["class"] });
+
+    // Initial detection
+    setTheme(html.classList.contains("dark") ? "dark" : "light");
+
+    return () => observer.disconnect();
+  }, []);
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="text-center sont">
-                
+          <SidebarMenuItem className="flex items-center justify-center gap-3 pb-4 border-b border-border50">
+            <div className="flex flex-col  items-center gap-1">
+              <div className="relative rounded-xl bg-primary/10 flex items-center justify-center">
+                {theme === "dark" ? (
+                  <img
+                    src="/light.png"
+                    alt="Keshah Logo"
+                    className=" w-20 drop-shadow-sm"
+                  />
+                ) : (<img
+                  src="/dark.png"
+                  alt="Keshah Logo"
+                  className=" w-20  drop-shadow-sm"
+                />)}
+
+              </div>
+              <div className="text-left">
+                <h1 className="text-lg font-semibold tracking-tight text-foreground">
+                  Keshah Analytics
+                </h1>
+              </div>
+            </div>
           </SidebarMenuItem>
+
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
