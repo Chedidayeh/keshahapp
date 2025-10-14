@@ -121,7 +121,7 @@ export function ChartLineUsers() {
         </CardAction>
       </CardHeader>
 
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent className="px-2 pt-2 sm:px-6">
         {loading ? (
         
           <div className="flex items-center justify-center h-56">

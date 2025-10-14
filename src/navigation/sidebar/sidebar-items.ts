@@ -16,6 +16,7 @@ import {
   Gauge,
   GraduationCap,
   type LucideIcon,
+  ShoppingBasket,
 } from "lucide-react";
 
 export interface NavSubItem {
@@ -52,6 +53,11 @@ export const sidebarItems: NavGroup[] = [
         title: "Dashboard",
         url: "/dashboard/view",
         icon: LayoutDashboard,
+      },
+      {
+        title: "Purchases",
+        url: "/dashboard/purchases",
+        icon: ShoppingBasket,
       },
     ],
   },

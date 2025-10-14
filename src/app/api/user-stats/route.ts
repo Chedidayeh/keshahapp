@@ -78,20 +78,62 @@ export async function GET() {
         OR recent_days_count > 0
     `;
 
+    
+    // ✅ NEW — Inactive users in the last 7 days
+    const inactiveUsers7DaysQuery = `
+      WITH recent_users AS (
+        SELECT
+          JSON_EXTRACT_SCALAR(data, '$.wp_user.ID') AS user_id,
+          PARSE_DATE('%d/%m/%Y', JSON_EXTRACT_SCALAR(data, '$.start_date.date')) AS start_date,
+          JSON_EXTRACT_ARRAY(data, '$.progress.days') AS progress_days
+        FROM
+          \`keshah-app.firestore_export.users_raw_latest\`
+        WHERE
+          JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
+          AND PARSE_DATE('%d/%m/%Y', JSON_EXTRACT_SCALAR(data, '$.start_date.date'))
+            BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 6 DAY) AND CURRENT_DATE()
+      ),
+      user_activity AS (
+        SELECT
+          user_id,
+          ARRAY_LENGTH(
+            ARRAY(
+              SELECT day
+              FROM UNNEST(progress_days) AS day
+              WHERE SAFE_CAST(JSON_EXTRACT_SCALAR(day, '$.modified_at._seconds') AS INT64)
+                >= UNIX_SECONDS(TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY))
+            )
+          ) AS recent_activity_count
+        FROM recent_users
+      )
+      SELECT
+        COUNT(*) AS total_recent_users,
+        COUNTIF(recent_activity_count = 0 OR recent_activity_count IS NULL) AS inactive_users_7_days,
+        SAFE_DIVIDE(
+          COUNTIF(recent_activity_count = 0 OR recent_activity_count IS NULL),
+          COUNT(*)
+        ) * 100 AS inactive_users_percent_7_days
+      FROM user_activity;
+    `;
+
+
     // ✅ Execute all queries in parallel
     const [
       [usersTodayResult],
       [totalUsersResult],
       [usersLast7DaysResult],
       [activeUsersResult],
-      groupedUsersResult
+      groupedUsersResult,
+      // [inactiveUsers7DaysResult],
     ] = await Promise.all([
       bigquery.query({ query: usersStartedTodayQuery }),
       bigquery.query({ query: totalUsersQuery }),
       bigquery.query({ query: usersLast7DaysQuery }),
       bigquery.query({ query: activeUsersQuery }),
-      bigquery.query({ query: totalGroupedUsersQuery })
+      bigquery.query({ query: totalGroupedUsersQuery }),
+      // bigquery.query({ query: inactiveUsers7DaysQuery }),
     ]);
+
 
     // ✅ Return structured response
     return NextResponse.json({
@@ -106,6 +148,8 @@ export async function GET() {
           user_count: Number(row.user_count ?? 0),
           total_users: Number(row.total_users ?? 0),
         })),
+        // inactiveUsers7Days: Number(inactiveUsers7DaysResult[0]?.inactive_users_7_days ?? 0),
+        // inactiveUsersPercent7Days: Number(inactiveUsers7DaysResult[0]?.inactive_users_percent_7_days ?? 0),
       },
     });
   } catch (error: any) {
