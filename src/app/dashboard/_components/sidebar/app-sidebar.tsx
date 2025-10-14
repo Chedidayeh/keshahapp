@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
 
@@ -57,6 +58,8 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [theme, setTheme] = useState<string | null>("dark");
+  const { state, isMobile } = useSidebar();
+
   useEffect(() => {
     const html = document.documentElement;
     const observer = new MutationObserver(() => {
@@ -75,29 +78,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="flex items-center justify-center gap-3 pb-4 border-b border-border50">
-            <div className="flex flex-col  items-center gap-1">
-              <div className="relative rounded-xl bg-primary/10 flex items-center justify-center">
-                {theme === "dark" ? (
-                  <img
-                    src="/light.png"
-                    alt="Keshah Logo"
-                    className=" w-20 drop-shadow-sm"
-                  />
-                ) : (<img
-                  src="/dark.png"
-                  alt="Keshah Logo"
-                  className=" w-20  drop-shadow-sm"
-                />)}
+          {state === "collapsed" ? 
+            <>
 
+            </>
+            : (
+              <SidebarMenuItem className="flex items-center justify-center gap-3 pb-4 border-b border-border50">
+              <div className="flex flex-col  items-center gap-1">
+                <div className="relative rounded-xl bg-primary/10 flex items-center justify-center">
+                  {theme === "dark" ? (
+                    <img
+                      src="/light.png"
+                      alt="Keshah Logo"
+                      className=" w-20 drop-shadow-sm"
+                    />
+                  ) : (
+                  <img
+                    src="/dark.png"
+                    alt="Keshah Logo"
+                    className=" w-20  drop-shadow-sm"
+                  />)
+                  }
+  
+                </div>
+                <div className="text-left">
+                  <h1 className="text-lg font-semibold tracking-tight text-foreground">
+                    Keshah Analytics
+                  </h1>
+                </div>
               </div>
-              <div className="text-left">
-                <h1 className="text-lg font-semibold tracking-tight text-foreground">
-                  Keshah Analytics
-                </h1>
-              </div>
-            </div>
-          </SidebarMenuItem>
+            </SidebarMenuItem>
+            )}
+
 
         </SidebarMenu>
       </SidebarHeader>

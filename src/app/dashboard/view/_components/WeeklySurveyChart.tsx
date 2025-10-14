@@ -115,37 +115,37 @@ export function WeeklySurveyChart() {
 
   return (
     <Card>
-      <CardHeader className="gap-2 flex justify-between items-center">
+      <CardHeader className="gap-2 flex flex-col lg:flex-row lg:justify-between lg:items-center">
         <div className="flex flex-col gap-2">
-        <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2">
             Weekly Survey Results
-                      <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Info className="size-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" />
-              </TooltipTrigger>
-<TooltipContent className="max-w-xs text-sm">
-  <p><strong>How the weekly survey data is generated:</strong></p>
-  <ul className="list-disc ml-4 space-y-1">
-    <li>Each record includes a survey day and 7 question answers (q1–q7).</li>
-    <li>Answers are extracted from JSON fields and converted into numbers (1 = Yes, 0 = No).</li>
-    <li>The results are grouped by <strong>day</strong> (representing each week).</li>
-    <li>For every question, the total “Yes” and “No” counts are calculated.</li>
-    <li>Percentage values are computed for both “Yes” and “No” answers.</li>
-  </ul>
-</TooltipContent>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="size-4 text-muted-foreground cursor-help hover:text-foreground transition-colors" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs text-sm">
+                  <p><strong>How the weekly survey data is generated:</strong></p>
+                  <ul className="list-disc ml-4 space-y-1">
+                    <li>Each record includes a survey day and 7 question answers (q1–q7).</li>
+                    <li>Answers are extracted from JSON fields and converted into numbers (1 = Yes, 0 = No).</li>
+                    <li>The results are grouped by <strong>day</strong> (representing each week).</li>
+                    <li>For every question, the total “Yes” and “No” counts are calculated.</li>
+                    <li>Percentage values are computed for both “Yes” and “No” answers.</li>
+                  </ul>
+                </TooltipContent>
 
 
 
-            </Tooltip>
-          </TooltipProvider>
+              </Tooltip>
+            </TooltipProvider>
           </CardTitle>
           <CardDescription>
             {noData
               ? "No survey data found yet"
               : week
-              ? `Survey results for day ${week}`
-              : "Loading days..."}
+                ? `Survey results for day ${week}`
+                : "Loading days..."}
           </CardDescription>
         </div>
         <CardAction>

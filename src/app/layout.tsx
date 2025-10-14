@@ -13,7 +13,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "keshah app",
+  title: "keshah Analytics",
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

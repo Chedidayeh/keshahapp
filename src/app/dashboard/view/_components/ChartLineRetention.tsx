@@ -117,7 +117,8 @@ export function ChartLineRetention() {
 
   return (
     <Card className="@container/card">
-      <CardHeader>
+            <CardHeader className="gap-2 flex flex-col lg:flex-row lg:justify-between lg:items-center">
+
         <CardTitle className="flex items-center gap-2">
           User Retention
           <TooltipProvider>

@@ -67,8 +67,8 @@ export function ChartLineUsers() {
 
   return (
     <Card className="@container/card">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">New Users 
+      <CardHeader className="gap-2 flex flex-col lg:flex-row lg:justify-between lg:items-center">
+      <CardTitle className="flex items-center gap-2">New Users 
                      <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
