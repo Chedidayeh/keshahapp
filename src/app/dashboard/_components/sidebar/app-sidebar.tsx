@@ -103,7 +103,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="text-left">
                   <h1 className="text-lg font-semibold tracking-tight text-foreground">
-                    Keshah Analytics
+                  KESHAH Analytics
                   </h1>
                 </div>
               </div>
