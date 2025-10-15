@@ -104,7 +104,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                 </ToggleGroupItem>
               </ToggleGroup>
             </div> */}
-{/* 
+
             <div className="space-y-1">
               <Label className="text-xs font-medium">Sidebar Variant</Label>
               <ToggleGroup
@@ -125,7 +125,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                   Floating
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div> */}
+            </div>
 
             {/* <div className="space-y-1">
               <Label className="text-xs font-medium">Navbar Style</Label>
@@ -146,7 +146,7 @@ export function LayoutControls(props: LayoutControlsProps) {
               </ToggleGroup>
             </div> */}
 
-            {/* <div className="space-y-1">
+            <div className="space-y-1">
               <Label className="text-xs font-medium">Sidebar Collapsible</Label>
               <ToggleGroup
                 className="w-full"
@@ -163,7 +163,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                   OffCanvas
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div> */}
+            </div>
 
             {/* <div className="space-y-1">
               <Label className="text-xs font-medium">Content Layout</Label>

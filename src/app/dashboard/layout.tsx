@@ -27,8 +27,8 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
 
   const [sidebarVariant, sidebarCollapsible, contentLayout, navbarStyle] = await Promise.all([
     getPreference<SidebarVariant>("sidebar_variant", SIDEBAR_VARIANT_VALUES, "floating"),
-    getPreference<SidebarCollapsible>("sidebar_collapsible", SIDEBAR_COLLAPSIBLE_VALUES, "offcanvas"),
-    getPreference<ContentLayout>("content_layout", CONTENT_LAYOUT_VALUES, "centered"),
+    getPreference<SidebarCollapsible>("sidebar_collapsible", SIDEBAR_COLLAPSIBLE_VALUES, "icon"),
+    getPreference<ContentLayout>("content_layout", CONTENT_LAYOUT_VALUES, "full-width"),
     getPreference<NavbarStyle>("navbar_style", NAVBAR_STYLE_VALUES, "sticky"),
   ]);
 
