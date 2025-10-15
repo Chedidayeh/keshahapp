@@ -118,7 +118,7 @@ export async function GET() {
   ORDER BY week;
 `;
 
-const queryWithQuestions = `
+    const queryWithQuestions = `
   WITH parsed AS (
     SELECT
       CAST(JSON_VALUE(data, '$.day') AS INT64) AS day,
@@ -146,6 +146,7 @@ const queryWithQuestions = `
 
   SELECT
     day AS week,
+    COUNT(*) AS total_users,  -- total number of users per week
 
     ANY_VALUE(q1_text) AS q1_text,
     COUNTIF(q1 = 0) AS q1_yes,
@@ -196,7 +197,7 @@ const queryWithQuestions = `
 
 
 
-    const [rows] = await bigquery.query({ query : queryWithQuestions });
+    const [rows] = await bigquery.query({ query: queryWithQuestions });
     return NextResponse.json(rows);
   } catch (error) {
     console.error("Error fetching weekly survey:", error);

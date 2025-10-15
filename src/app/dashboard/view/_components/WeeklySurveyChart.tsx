@@ -43,7 +43,8 @@ export interface WeeklySurveyQuestion {
 export interface WeeklySurveyData {
   week: number;                   // the week number or day
   questions: WeeklySurveyQuestion[]; // array of 7+ questions
-  // Optional: if your API also returns raw q1_yes, q2_yes, etc.
+  totalUsers: number; // 
+
   [key: string]: any;
 }
 
@@ -117,25 +118,32 @@ export function WeeklySurveyChart() {
     // Dynamically get all question texts and counts
     const chartData = Object.keys(row)
       .filter((key) => key.endsWith("_text"))
-      .sort() // ensure Q1, Q2, ... order
+      .sort()
       .map((key, index) => {
-        const qIndex = key.replace("_text", "").replace("q", ""); // e.g., "1"
+        const qIndex = key.replace("_text", "").replace("q", "");
         const yes = row[`q${qIndex}_yes`] ?? 0;
         const no = row[`q${qIndex}_no`] ?? 0;
         const total = yes + no || 1;
 
         return {
-          question: `Q${index + 1}`,  // hardcoded Q1, Q2, ...
-          questionText: row[key],      // full question text
+          question: `Q${index + 1}`,
+          questionText: row[key],
           yes,
           no,
           yesPct: Math.round((yes / total) * 100),
           noPct: Math.round((no / total) * 100),
+          totalUsers: row.total_users ?? total, // <-- include total users
         };
       });
 
+
     setData(chartData);
   }, [week, allData]);
+
+  const totalUsersForWeek = week
+    ? allData.find((r) => r.week === week)?.total_users ?? 0
+    : 0;
+
 
 
   return (
@@ -144,6 +152,7 @@ export function WeeklySurveyChart() {
         <div className="flex flex-col gap-2">
           <CardTitle className="flex items-center gap-2">
             Weekly Survey Results
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -164,7 +173,7 @@ export function WeeklySurveyChart() {
             {noData
               ? "No survey data found yet"
               : week
-                ? `Survey results for week ${week}`
+                ? `Survey results for week ${week} of ${totalUsersForWeek} user.`
                 : "Loading weeks..."}
           </CardDescription>
         </div>
