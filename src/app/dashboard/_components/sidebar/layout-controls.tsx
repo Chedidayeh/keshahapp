@@ -85,7 +85,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                 </SelectContent>
               </Select>
             </div>
-
+{/* 
             <div className="space-y-1">
               <Label className="text-xs font-medium">Mode</Label>
               <ToggleGroup
@@ -103,8 +103,8 @@ export function LayoutControls(props: LayoutControlsProps) {
                   Dark
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div>
-
+            </div> */}
+{/* 
             <div className="space-y-1">
               <Label className="text-xs font-medium">Sidebar Variant</Label>
               <ToggleGroup
@@ -125,9 +125,9 @@ export function LayoutControls(props: LayoutControlsProps) {
                   Floating
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div>
+            </div> */}
 
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               <Label className="text-xs font-medium">Navbar Style</Label>
               <ToggleGroup
                 className="w-full"
@@ -144,9 +144,9 @@ export function LayoutControls(props: LayoutControlsProps) {
                   Scroll
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div>
+            </div> */}
 
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               <Label className="text-xs font-medium">Sidebar Collapsible</Label>
               <ToggleGroup
                 className="w-full"
@@ -163,9 +163,9 @@ export function LayoutControls(props: LayoutControlsProps) {
                   OffCanvas
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div>
+            </div> */}
 
-            <div className="space-y-1">
+            {/* <div className="space-y-1">
               <Label className="text-xs font-medium">Content Layout</Label>
               <ToggleGroup
                 className="w-full"
@@ -182,7 +182,7 @@ export function LayoutControls(props: LayoutControlsProps) {
                   Full Width
                 </ToggleGroupItem>
               </ToggleGroup>
-            </div>
+            </div> */}
           </div>
         </div>
       </PopoverContent>

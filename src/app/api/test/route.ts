@@ -194,15 +194,14 @@ FROM \`keshah-app.firestore_export.users_raw_latest\`
 `
 
 
-        const finalResultHairLossReduced = await bigquery.query({ query: hairLossReduced });
-        const finalResultHairLossStopped = await bigquery.query({ query: hairLossStopped });
+        const result = await bigquery.query({ query: users_raw_latest });
 
 
 
 
 
 
-    return NextResponse.json(finalResultHairLossStopped[0] );
+    return NextResponse.json(result[0] );
 
 
 
