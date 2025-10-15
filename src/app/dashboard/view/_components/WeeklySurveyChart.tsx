@@ -44,7 +44,7 @@ export interface WeeklySurveyData {
   week: number;                   // the week number or day
   questions: WeeklySurveyQuestion[]; // array of 7+ questions
   // Optional: if your API also returns raw q1_yes, q2_yes, etc.
-  [key: string]: any; 
+  [key: string]: any;
 }
 
 
@@ -60,8 +60,8 @@ export function WeeklySurveyChart() {
   const [data, setData] = React.useState<WeeklySurveyQuestion[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [noData, setNoData] = React.useState(false);
-  console.log("data",data)
-  console.log("allData",allData)
+  console.log("data", data)
+  console.log("allData", allData)
 
   // Fetch all survey data
   React.useEffect(() => {
@@ -107,13 +107,13 @@ export function WeeklySurveyChart() {
       setData([]);
       return;
     }
-  
+
     const row = allData.find((r) => r.week === week);
     if (!row) {
       setData([]);
       return;
     }
-  
+
     // Dynamically get all question texts and counts
     const chartData = Object.keys(row)
       .filter((key) => key.endsWith("_text"))
@@ -123,7 +123,7 @@ export function WeeklySurveyChart() {
         const yes = row[`q${qIndex}_yes`] ?? 0;
         const no = row[`q${qIndex}_no`] ?? 0;
         const total = yes + no || 1;
-  
+
         return {
           question: `Q${index + 1}`,  // hardcoded Q1, Q2, ...
           questionText: row[key],      // full question text
@@ -133,10 +133,10 @@ export function WeeklySurveyChart() {
           noPct: Math.round((no / total) * 100),
         };
       });
-  
+
     setData(chartData);
   }, [week, allData]);
-  
+
 
   return (
     <Card>
@@ -203,66 +203,66 @@ export function WeeklySurveyChart() {
           </div>
         ) : (
           <ChartContainer config={chartConfig}>
-  <BarChart data={data} barGap={8} barCategoryGap="20%">
-    <CartesianGrid vertical={false} />
-    <XAxis
-      dataKey="question" // <-- show Q1, Q2, Q3 on X axis
-      tickLine={false}
-      tickMargin={10}
-      axisLine={false}
-    />
-<ChartTooltip
-  cursor={false}
-  content={(props: TooltipProps<number, string>) => {
-    const { active, payload } = props;
-    if (!active || !payload || payload.length === 0) return null;
+            <BarChart data={data} barGap={8} barCategoryGap="20%">
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="question" // <-- show Q1, Q2, Q3 on X axis
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={(props: TooltipProps<number, string>) => {
+                  const { active, payload } = props;
+                  if (!active || !payload || payload.length === 0) return null;
 
-    const data = payload[0].payload; // full question object
-    return (
-      <div className="bg-white dark:bg-black p-2 shadow-lg rounded border">
-        <div className="flex flex-col gap-1">
-          <div className="font-semibold">{data.question}:</div>
-          <div className="text-sm text-muted-foreground">{data.questionText}</div>
-        </div>
+                  const data = payload[0].payload; // full question object
+                  return (
+                    <div className="bg-white dark:bg-black p-2 shadow-lg rounded border">
+                      <div className="flex flex-col gap-1">
+                        <div className="font-semibold">{data.question}:</div>
+                        <div className="text-sm text-muted-foreground">{data.questionText}</div>
+                      </div>
 
-        <div className="mt-2 text-sm flex flex-col gap-1">
-          <span className="flex items-center gap-2">
-            <span
-              className="inline-block w-3 h-3 rounded-sm"
-              style={{ backgroundColor: chartConfig.yes.color }}
-            ></span>
-            Yes: {data.yes}
-          </span>
-          <span className="flex items-center gap-2">
-            <span
-              className="inline-block w-3 h-3 rounded-sm"
-              style={{ backgroundColor: chartConfig.no.color }}
-            ></span>
-            No: {data.no}
-          </span>
-        </div>
-      </div>
-    );
-  }}
-/>
+                      <div className="mt-2 text-sm flex flex-col gap-1">
+                        <span className="flex items-center gap-2">
+                          <span
+                            className="inline-block w-3 h-3 rounded-sm"
+                            style={{ backgroundColor: chartConfig.yes.color }}
+                          ></span>
+                          Yes: {data.yes}
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span
+                            className="inline-block w-3 h-3 rounded-sm"
+                            style={{ backgroundColor: chartConfig.no.color }}
+                          ></span>
+                          No: {data.no}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                }}
+              />
 
-✅ Key p
-    <Bar dataKey="yes" fill={chartConfig.yes.color} radius={4}>
-      <LabelList
-        dataKey="yesPct"
-        position="top"
-        formatter={(val: number) => `${val}%`}
-      />
-    </Bar>
-    <Bar dataKey="no" fill={chartConfig.no.color} radius={4}>
-      <LabelList
-        dataKey="noPct"
-        position="top"
-        formatter={(val: number) => `${val}%`}
-      />
-    </Bar>
-  </BarChart>
-</ChartContainer>
+              ✅ Key p
+              <Bar dataKey="yes" fill={chartConfig.yes.color} radius={4}>
+                <LabelList
+                  dataKey="yesPct"
+                  position="top"
+                  formatter={(val: number) => `${val}%`}
+                />
+              </Bar>
+              <Bar dataKey="no" fill={chartConfig.no.color} radius={4}>
+                <LabelList
+                  dataKey="noPct"
+                  position="top"
+                  formatter={(val: number) => `${val}%`}
+                />
+              </Bar>
+            </BarChart>
+          </ChartContainer>
 
         )}
       </CardContent>
