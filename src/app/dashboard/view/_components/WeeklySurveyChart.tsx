@@ -184,12 +184,12 @@ export function WeeklySurveyChart() {
             disabled={noData || loading || weeks.length === 0}
           >
             <SelectTrigger className="flex w-44" size="sm">
-              <SelectValue placeholder="Select week" />
+              <SelectValue placeholder="Select day" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               {weeks.map((w) => (
                 <SelectItem key={w} value={w.toString()}>
-                  Week {w}
+                  Day {w}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -208,7 +208,7 @@ export function WeeklySurveyChart() {
           </div>
         ) : data.length === 0 ? (
           <div className="text-center text-muted-foreground py-16">
-            No data yet for week {week}
+            No data yet for day {week}
           </div>
         ) : (
           <ChartContainer config={chartConfig}>

@@ -14,7 +14,7 @@ Limit 5
 
     const pchecka_raw_latest = `SELECT data
 FROM \`keshah-app.firestore_export.pchecka_raw_latest\`
-Limit 5
+Limit 20
 `;
 
     const data2 = `
@@ -104,34 +104,77 @@ GROUP BY week
 ORDER BY week;
 `;
 
-    // --- Scalp Health Query ---
-    const scalpHealthOverallQuery = `
-    SELECT
-      COUNT(*) AS total_users,
-      COUNT(IF(JSON_EXTRACT_SCALAR(data, '$.scalp_health_support_purchased') = 'true', 1, NULL)) AS total_purchased,
-      ROUND(
-        COUNT(IF(JSON_EXTRACT_SCALAR(data, '$.scalp_health_support_purchased') = 'true', 1, NULL)) 
-        / COUNT(*) * 100, 2
-      ) AS purchase_percentage
-    FROM \`keshah-app.firestore_export.users_raw_latest\`
-    WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
-  `;
-
-    // --- Scalp Health Query ---
-    const scalpHealthOverallQuery2 = `
-        SELECT
-          COUNT(*) AS total_users,        
-        FROM \`keshah-app.firestore_export.users_raw_latest\`
-        WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
-        AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
-        AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') != ''
-      `;
 
 
 
+      const test1 = 
+`
+SELECT
+  COUNT(*) AS total_users
+FROM
+  \`keshah-app.firestore_export.users_raw_latest\`
+WHERE JSON_EXTRACT_SCALAR(data, '$.hair_loss_stoppage_reported_once') IS NOT NULL
+  OR JSON_EXTRACT_SCALAR(data, '$.hair_loss_reduced_reported_once') IS NOT NULL
+`;
 
 
-    const result = await bigquery.query({ query: scalpHealthOverallQuery2 });
+        // Reported reduction only
+        const test2 = 
+` SELECT
+COUNT(*) AS total_users,
+COUNTIF(JSON_EXTRACT_SCALAR(data, '$.hair_loss_reduced_reported_once') = 'true') AS reported_reduction
+FROM \`keshah-app.firestore_export.users_raw_latest\`
+WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
+AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
+AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') != ''
+`
+
+
+      const hairLossStopped = ` SELECT
+  COUNT(*) AS total_users,
+
+  COUNTIF(JSON_EXTRACT_SCALAR(data, '$.hair_loss_stoppage_reported_once') = 'true') AS reported_hair_loss_stopped,
+
+  COUNTIF(
+    JSON_EXTRACT_SCALAR(data, '$.hair_loss_stoppage_reported_once') = 'true' AND
+    JSON_EXTRACT_SCALAR(data, '$.regrowth_treatment_purchased') = 'true'
+  ) AS purchased_regrowth,
+
+  ROUND(
+    100 * SAFE_DIVIDE(
+      COUNTIF(
+        JSON_EXTRACT_SCALAR(data, '$.hair_loss_stoppage_reported_once') = 'true' AND
+        JSON_EXTRACT_SCALAR(data, '$.regrowth_treatment_purchased') = 'true'
+      ),
+      COUNTIF(JSON_EXTRACT_SCALAR(data, '$.hair_loss_stoppage_reported_once') = 'true')
+    ),
+    2
+  ) AS purchased_percentage_of_reduction,
+
+  ROUND(
+    100 * SAFE_DIVIDE(
+      COUNTIF(
+        JSON_EXTRACT_SCALAR(data, '$.hair_loss_stoppage_reported_once') = 'true' AND
+        JSON_EXTRACT_SCALAR(data, '$.regrowth_treatment_purchased') = 'true'
+      ),
+      COUNT(*)
+    ),
+    2
+  ) AS purchased_percentage_of_total
+
+FROM \`keshah-app.firestore_export.users_raw_latest\`
+
+WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
+  AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
+  AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') != ''
+
+      `
+
+
+
+
+
+    const result = await bigquery.query({ query: test1 });
 
     console.log("result", result)
 
