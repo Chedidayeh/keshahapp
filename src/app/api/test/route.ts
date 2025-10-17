@@ -9,7 +9,7 @@ export async function GET() {
 
     const users_raw_latest = `SELECT data
 FROM \`keshah-app.firestore_export.users_raw_latest\`
-Limit 5
+Limit 6
 `;
 
     const pchecka_raw_latest = `SELECT data
@@ -174,7 +174,7 @@ WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
 
 
 
-    const result = await bigquery.query({ query: test1 });
+    const result = await bigquery.query({ query: users_raw_latest });
 
     console.log("result", result)
 

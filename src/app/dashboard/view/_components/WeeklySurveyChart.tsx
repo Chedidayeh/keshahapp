@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, LabelList, TooltipProps } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, LabelList, TooltipProps, YAxis } from "recharts";
 
 import {
   Card,
@@ -145,6 +145,26 @@ export function WeeklySurveyChart() {
     : 0;
 
 
+    // Compute dynamic Y-axis domain based on data values
+const domain = React.useMemo(() => {
+  if (!data || data.length === 0) return [0, 100];
+
+  // Compute average of yes/no counts and percentages
+  const allYes = data.map((d) => d.yes);
+  const allNo = data.map((d) => d.no);
+  const allYesPct = data.map((d) => d.yesPct);
+  const allNoPct = data.map((d) => d.noPct);
+
+  const avgCount = (allYes.reduce((a, b) => a + b, 0) + allNo.reduce((a, b) => a + b, 0)) / (data.length * 2);
+  const avgPct = (allYesPct.reduce((a, b) => a + b, 0) + allNoPct.reduce((a, b) => a + b, 0)) / (data.length * 2);
+
+  // Determine the max between avg count and avg percentage
+  const maxVal = Math.max(...allYes, ...allNo, avgCount, avgPct);
+
+  // Add a bit of headroom for label visibility
+  return [0, Math.ceil(maxVal * 1.2)];
+}, [data]);
+
 
   return (
     <Card>
@@ -173,7 +193,7 @@ export function WeeklySurveyChart() {
             {noData
               ? "No survey data found yet"
               : week
-                ? `Survey results for week ${week} of ${totalUsersForWeek} user.`
+                ? `Survey results for day ${week} of ${totalUsersForWeek} user.`
                 : "Loading weeks..."}
           </CardDescription>
         </div>
@@ -214,6 +234,10 @@ export function WeeklySurveyChart() {
           <ChartContainer config={chartConfig}>
             <BarChart data={data} barGap={8} barCategoryGap="20%">
               <CartesianGrid vertical={false} />
+              <YAxis type="number" domain={domain} tickFormatter={(val) => `${val}`} />
+
+
+
               <XAxis
                 dataKey="question" // <-- show Q1, Q2, Q3 on X axis
                 tickLine={false}
@@ -255,7 +279,7 @@ export function WeeklySurveyChart() {
                 }}
               />
 
-              ✅ Key p
+              
               <Bar dataKey="yes" fill={chartConfig.yes.color} radius={4}>
                 <LabelList
                   dataKey="yesPct"
@@ -286,8 +310,8 @@ export function WeeklySurveyChart() {
         ) : (
           <div className="text-muted-foreground leading-none">
             {data.length > 0
-              ? `Showing survey answers for week ${week}`
-              : `No survey data available for week ${week}`}
+              ? `Showing survey answers for day ${week}`
+              : `No survey data available for day ${week}`}
           </div>
         )}
       </CardFooter>
