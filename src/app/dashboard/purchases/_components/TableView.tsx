@@ -108,7 +108,7 @@ export function TableView() {
           <Info className="h-4 w-4 cursor-pointer text-muted-foreground" />
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-xs text-sm">
-          Total number of freev2 users in the dataset.
+          Total started freev2 users in the dataset.
         </TooltipContent>
       </Tooltip>
     </div>

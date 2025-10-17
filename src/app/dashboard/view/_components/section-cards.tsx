@@ -24,6 +24,7 @@ type GroupedUser = {
 type Stats = {
   todayUsers: number;
   totalUsers: number;
+  freev2StartedUsers: number
   last7DaysUsers: number;
   activeUsers: number;
   groupedUsers: GroupedUser[];
@@ -35,6 +36,7 @@ export function SectionCards() {
   const [stats, setStats] = useState<Stats>({
     todayUsers: 0,
     totalUsers: 0,
+    freev2StartedUsers: 0,
     last7DaysUsers: 0,
     activeUsers: 0,
     groupedUsers: [],
@@ -67,10 +69,6 @@ export function SectionCards() {
   }, []);
 
 
-
-  if (error) {
-    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
-  }
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
@@ -108,7 +106,6 @@ export function SectionCards() {
       </Card>
 
       {/* 2️⃣ Total Users */}
-      {/* 2️⃣ Total Users */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Users</CardDescription>
@@ -134,6 +131,17 @@ export function SectionCards() {
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-2 font-medium">
+              Total started freev2 users
+            </div>
+            <div>
+              <Badge>
+                {loading ? "-" : stats.freev2StartedUsers.toLocaleString()}
+              </Badge>
+            </div>
+          </div>
+
           <div className="flex gap-2 font-medium">
             Overall registered users
           </div>
@@ -156,7 +164,7 @@ export function SectionCards() {
           <CardDescription>New Users (Last 7 Days)</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             {loading ? "-" : stats.last7DaysUsers.toLocaleString()} <br />
-          {/* percent  {stats.inactiveUsersPercent7Days.toLocaleString()}% <br />
+            {/* percent  {stats.inactiveUsersPercent7Days.toLocaleString()}% <br />
             number {stats.inactiveUsers7Days.toLocaleString()} */}
           </CardTitle>
           <CardAction>
@@ -181,14 +189,14 @@ export function SectionCards() {
           <div className="flex gap-2 font-medium">
             Recent growth <TrendingUp className="size-4" />
           </div>
-          <div className="text-muted-foreground">Users joined in the past week</div>
+          <div className="text-muted-foreground">Users started in the past week</div>
         </CardFooter>
       </Card>
 
-      {/* 4️⃣ Active Users */}
+      {/* 4️⃣ Active Users (Last 7 Days) */}
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Users</CardDescription>
+          <CardDescription>Active Users (Last 7 Days)</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             {loading ? "-" : stats.activeUsers.toLocaleString()}
           </CardTitle>
@@ -198,26 +206,40 @@ export function SectionCards() {
                 <Info className="size-4 ml-1 cursor-pointer text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs text-sm">
-                This shows the number of users who have been **active in the last 2 days**.
-                <ul className="list-disc ml-4 space-y-1">
-                  <li>Includes users who **created their account in the last 2 days**.</li>
-                  <li>Also includes users who had **any progress activity** in the last 2 days.</li>
+                <p>
+                  This number shows how many users have been <strong>active during the last 7 days</strong>.
+                </p>
+
+                <ul className="list-disc ml-4 space-y-1 mt-1">
+                  <li>
+                    Each user’s activity is tracked daily when they make progress or complete tasks.
+                  </li>
+                  <li>
+                    The system looks at all users and checks who had any activity within the past week.
+                  </li>
+                  <li>
+                    Only users who actually did something — like studying, training, or interacting — are counted as active.
+                  </li>
                 </ul>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  This metric reflects **recent engagement** and how many users are actively interacting with the platform.
+
+                <p className="mt-2 text-xs text-muted-foreground">
+                  In simple terms, this total reflects how many people have used the platform recently and stayed engaged over the past 7 days.
                 </p>
               </TooltipContent>
+
 
             </Tooltip>
           </CardAction>
         </CardHeader>
+
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="flex gap-2 font-medium">
             Engaged users <TrendingUp className="size-4" />
           </div>
-          <div className="text-muted-foreground">Activity in last 2 days</div>
+          <div className="text-muted-foreground">Activity recorded in the last 7 days</div>
         </CardFooter>
       </Card>
+
 
     </div>
   );

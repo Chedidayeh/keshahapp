@@ -76,13 +76,13 @@ export function SectionCards() {
       {/* 🧍 Total Free Users */}
       <Card>
         <CardHeader>
-          <CardDescription className="flex items-center gap-2">Total freev2 Users
+          <CardDescription className="flex items-center gap-2">Total started freev2 Users
             <Tooltip>
               <TooltipTrigger>
                 <Info className="size-4 cursor-pointer text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs text-sm">
-                These are all users with <strong>user_type = 'freev2'</strong>.
+                These are all users that started treatment with <strong>user_type = 'freev2'</strong>.
               </TooltipContent>
             </Tooltip>
           </CardDescription>
@@ -91,7 +91,7 @@ export function SectionCards() {
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex items-center justify-between text-sm">
-          <div>Total number of users with freev2 accounts</div>
+          <div>Total started users with freev2 accounts</div>
 
         </CardFooter>
       </Card>

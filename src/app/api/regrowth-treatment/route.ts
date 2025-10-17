@@ -39,6 +39,8 @@ ROUND(
 ) AS purchased_percentage_of_total
 FROM \`keshah-app.firestore_export.users_raw_latest\`
 WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
+AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
+AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') != ''
 `
 
         // Reported success (stoppage)
@@ -72,7 +74,8 @@ ROUND(
 ) AS purchased_percentage_of_total
 FROM \`keshah-app.firestore_export.users_raw_latest\`
 WHERE JSON_EXTRACT_SCALAR(data, '$.user_type') = 'freev2'
-
+AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') IS NOT NULL
+AND JSON_EXTRACT_SCALAR(data, '$.start_date.date') != ''
 `
 
 
